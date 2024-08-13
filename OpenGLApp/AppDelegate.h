@@ -1,9 +1,4 @@
-//
-//  AppDelegate.h
-//  OpenGLApp
-//
-//  Created by William Sherif on 2024-02-03.
-//
+#pragma once
 
 #import <Cocoa/Cocoa.h>
 

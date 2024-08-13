@@ -60,9 +60,9 @@
 				3D301B752B6EC85100BF6A9F /* MyOpenGLView.mm */,
 				3D301B642B6EC81E00BF6A9F /* AppDelegate.h */,
 				3D301B652B6EC81E00BF6A9F /* AppDelegate.m */,
+				3D301B6C2B6EC82300BF6A9F /* main.m */,
 				3D301B672B6EC82300BF6A9F /* Assets.xcassets */,
 				3D301B692B6EC82300BF6A9F /* MainMenu.xib */,
-				3D301B6C2B6EC82300BF6A9F /* main.m */,
 				3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */,
 			);
 			path = OpenGLApp;

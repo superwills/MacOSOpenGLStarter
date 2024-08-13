@@ -1,10 +1,3 @@
-//
-//  AppDelegate.m
-//  OpenGLApp
-//
-//  Created by William Sherif on 2024-02-03.
-//
-
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
@@ -14,18 +7,18 @@
 
 @implementation AppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
+- (void) applicationDidFinishLaunching:(NSNotification*)aNotification {
+  // Insert code here to initialize your application
 }
 
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
+- (void) applicationWillTerminate:(NSNotification*)aNotification {
+  // Insert code here to tear down your application
 }
 
 
-- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
-    return YES;
+- (BOOL) applicationSupportsSecureRestorableState:(NSApplication*)app {
+  return YES;
 }
 
 
