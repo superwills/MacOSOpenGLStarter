@@ -7,23 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D301B662B6EC81E00BF6A9F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B652B6EC81E00BF6A9F /* AppDelegate.m */; };
+		3D301B662B6EC81E00BF6A9F /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B652B6EC81E00BF6A9F /* AppDelegate.mm */; };
 		3D301B682B6EC82300BF6A9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D301B672B6EC82300BF6A9F /* Assets.xcassets */; };
 		3D301B6B2B6EC82300BF6A9F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D301B692B6EC82300BF6A9F /* MainMenu.xib */; };
-		3D301B6D2B6EC82300BF6A9F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B6C2B6EC82300BF6A9F /* main.m */; };
+		3D301B6D2B6EC82300BF6A9F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B6C2B6EC82300BF6A9F /* main.mm */; };
 		3D301B762B6EC85100BF6A9F /* MyOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B752B6EC85100BF6A9F /* MyOpenGLView.mm */; };
+		3DE306982C6C2AC500663252 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306972C6C2AC500663252 /* OpenGL.framework */; };
+		3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306992C6C2ACE00663252 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3D301B612B6EC81E00BF6A9F /* OpenGLApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenGLApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D301B642B6EC81E00BF6A9F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		3D301B652B6EC81E00BF6A9F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3D301B652B6EC81E00BF6A9F /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		3D301B672B6EC82300BF6A9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D301B6A2B6EC82300BF6A9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		3D301B6C2B6EC82300BF6A9F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3D301B6C2B6EC82300BF6A9F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenGLApp.entitlements; sourceTree = "<group>"; };
 		3D301B742B6EC85100BF6A9F /* MyOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenGLView.h; sourceTree = "<group>"; };
 		3D301B752B6EC85100BF6A9F /* MyOpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyOpenGLView.mm; sourceTree = "<group>"; };
+		3DE306972C6C2AC500663252 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		3DE306992C6C2ACE00663252 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		3DE306AF2C6C438000663252 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +36,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */,
+				3DE306982C6C2AC500663252 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +49,7 @@
 			children = (
 				3D301B632B6EC81E00BF6A9F /* OpenGLApp */,
 				3D301B622B6EC81E00BF6A9F /* Products */,
+				3DE306962C6C2AC500663252 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,13 +67,23 @@
 				3D301B742B6EC85100BF6A9F /* MyOpenGLView.h */,
 				3D301B752B6EC85100BF6A9F /* MyOpenGLView.mm */,
 				3D301B642B6EC81E00BF6A9F /* AppDelegate.h */,
-				3D301B652B6EC81E00BF6A9F /* AppDelegate.m */,
-				3D301B6C2B6EC82300BF6A9F /* main.m */,
+				3D301B652B6EC81E00BF6A9F /* AppDelegate.mm */,
+				3D301B6C2B6EC82300BF6A9F /* main.mm */,
 				3D301B672B6EC82300BF6A9F /* Assets.xcassets */,
 				3D301B692B6EC82300BF6A9F /* MainMenu.xib */,
 				3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */,
 			);
 			path = OpenGLApp;
+			sourceTree = "<group>";
+		};
+		3DE306962C6C2AC500663252 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3DE306AF2C6C438000663252 /* Carbon.framework */,
+				3DE306992C6C2ACE00663252 /* Cocoa.framework */,
+				3DE306972C6C2AC500663252 /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,8 +156,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D301B762B6EC85100BF6A9F /* MyOpenGLView.mm in Sources */,
-				3D301B6D2B6EC82300BF6A9F /* main.m in Sources */,
-				3D301B662B6EC81E00BF6A9F /* AppDelegate.m in Sources */,
+				3D301B6D2B6EC82300BF6A9F /* main.mm in Sources */,
+				3D301B662B6EC81E00BF6A9F /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

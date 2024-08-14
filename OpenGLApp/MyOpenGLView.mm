@@ -1,6 +1,6 @@
 #import "MyOpenGLView.h"
 #include <OpenGL/gl.h>
- 
+
 @implementation MyOpenGLView
 
 - (void) drawRect:(NSRect)bounds {
