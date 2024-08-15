@@ -10,8 +10,6 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification {
   // Insert code here to initialize your application
-  MyOpenGLView *view = (MyOpenGLView*)self.window.contentView;
-  [view createDisplayLink];
 }
 
 

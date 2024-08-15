@@ -8,6 +8,20 @@ StopWatch sw;
 
 @implementation MyOpenGLView
 
+- (instancetype)initWithFrame:(NSRect)frameRect {
+  self = [super initWithFrame:frameRect];
+  if( !self )  return self;
+  [self createDisplayLink];
+  return self;
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)coder {
+  self = [super initWithCoder:coder];
+  if( !self )  return self;
+  [self createDisplayLink];
+  return self;
+}
+
 - (void) update:(CADisplayLink*) sender {
   static double last = sw.sec();
   

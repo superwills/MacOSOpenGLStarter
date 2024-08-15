@@ -5,7 +5,4 @@
 @interface MyOpenGLView : NSOpenGLView {
 }
 
-- (void) createDisplayLink;
-- (void) drawRect:(NSRect)bounds;
-
 @end
