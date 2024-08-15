@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import "MyOpenGLView.h"
 
 @interface AppDelegate ()
 
@@ -9,6 +10,8 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification {
   // Insert code here to initialize your application
+  MyOpenGLView *view = (MyOpenGLView*)self.window.contentView;
+  [view createDisplayLink];
 }
 
 
