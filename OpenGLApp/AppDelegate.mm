@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import "MyOpenGLView.h"
+#import "OpenGLView.h"
 
 @interface AppDelegate ()
 

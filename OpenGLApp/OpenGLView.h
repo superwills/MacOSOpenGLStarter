@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface MyOpenGLView : NSOpenGLView {
+@interface OpenGLView : NSOpenGLView {
 }
 
 @end

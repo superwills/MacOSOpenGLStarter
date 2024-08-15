@@ -1,4 +1,4 @@
-#import "MyOpenGLView.h"
+#import "OpenGLView.h"
 #include <OpenGL/gl.h>
 #import <QuartzCore/CADisplayLink.h>
 
@@ -6,7 +6,7 @@
 
 StopWatch sw;
 
-@implementation MyOpenGLView
+@implementation OpenGLView
 
 - (instancetype)initWithFrame:(NSRect)frameRect {
   self = [super initWithFrame:frameRect];
