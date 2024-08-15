@@ -16,6 +16,7 @@
 		3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306992C6C2ACE00663252 /* Cocoa.framework */; };
 		3DE307022C6E6DFB00663252 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE307012C6E6DFB00663252 /* QuartzCore.framework */; };
 		3DE307052C6E6E2500663252 /* StopWatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DE307032C6E6E2500663252 /* StopWatch.cpp */; };
+		3DE307082C6EA64300663252 /* WindowDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3DE307072C6EA64300663252 /* WindowDelegate.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,9 @@
 		3DE307012C6E6DFB00663252 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		3DE307032C6E6E2500663252 /* StopWatch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StopWatch.cpp; sourceTree = "<group>"; };
 		3DE307042C6E6E2500663252 /* StopWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StopWatch.h; sourceTree = "<group>"; };
+		3DE307062C6EA60200663252 /* Superglobals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Superglobals.h; sourceTree = "<group>"; };
+		3DE307072C6EA64300663252 /* WindowDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowDelegate.mm; sourceTree = "<group>"; };
+		3DE307092C6EA65000663252 /* WindowDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,9 @@
 				3D301B672B6EC82300BF6A9F /* Assets.xcassets */,
 				3D301B692B6EC82300BF6A9F /* MainMenu.xib */,
 				3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */,
+				3DE307062C6EA60200663252 /* Superglobals.h */,
+				3DE307092C6EA65000663252 /* WindowDelegate.h */,
+				3DE307072C6EA64300663252 /* WindowDelegate.mm */,
 			);
 			path = OpenGLApp;
 			sourceTree = "<group>";
@@ -165,6 +172,7 @@
 				3D301B762B6EC85100BF6A9F /* OpenGLView.mm in Sources */,
 				3D301B6D2B6EC82300BF6A9F /* main.mm in Sources */,
 				3D301B662B6EC81E00BF6A9F /* AppDelegate.mm in Sources */,
+				3DE307082C6EA64300663252 /* WindowDelegate.mm in Sources */,
 				3DE307052C6E6E2500663252 /* StopWatch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

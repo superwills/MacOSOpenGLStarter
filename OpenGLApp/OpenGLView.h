@@ -5,4 +5,6 @@
 @interface OpenGLView : NSOpenGLView {
 }
 
+- (void) createDisplayLink;
+
 @end

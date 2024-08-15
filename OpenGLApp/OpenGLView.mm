@@ -11,25 +11,19 @@ StopWatch sw;
 - (instancetype)initWithFrame:(NSRect)frameRect {
   self = [super initWithFrame:frameRect];
   if( !self )  return self;
-  [self createDisplayLink];
+  ///[self createDisplayLink];
   return self;
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
   self = [super initWithCoder:coder];
   if( !self )  return self;
-  [self createDisplayLink];
+  ////[self createDisplayLink];
   return self;
 }
 
 - (void) update:(CADisplayLink*) sender {
-  static double last = sw.sec();
   
-  double now = sw.sec();
-  double diff = now - last;
-  printf( "step %f %f\n", diff, 1/diff );
-  
-  last = sw.sec();
   [self display];
 }
 
@@ -40,11 +34,21 @@ StopWatch sw;
 }
 
 - (void) drawRect:(NSRect)bounds {
+
+static double last = sw.sec();
+  
+  double now = sw.sec();
+  double diff = now - last;
+  printf( "step %f %f\n", diff, 1/diff );
+  
+  last = sw.sec();
   glClearColor( 0, 0, 0, 0 );
   glClear( GL_COLOR_BUFFER_BIT );
   glColor3f( 1, .85, .35 );
   
-  float d = fabsf( sinf( sw.sec() ) );
+  static float d = 0;
+  //d = fabsf( sinf( sw.sec() ) );
+  d += .001;
   glBegin(GL_TRIANGLES);
   glVertex3f(  0.0,  0.6, 0.0);
   glVertex3f( -0.2 - d, -0.3, 0.0);
