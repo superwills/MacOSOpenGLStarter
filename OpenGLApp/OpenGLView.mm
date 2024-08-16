@@ -8,17 +8,11 @@ StopWatch sw;
 
 @implementation OpenGLView
 
-- (instancetype)initWithFrame:(NSRect)frameRect {
-  self = [super initWithFrame:frameRect];
-  if( !self )  return self;
-  ///[self createDisplayLink];
-  return self;
-}
-
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
   self = [super initWithCoder:coder];
   if( !self )  return self;
-  ////[self createDisplayLink];
+  // Hook in display link creation immediately after construction
+  [self createDisplayLink];
   return self;
 }
 
