@@ -27,7 +27,7 @@ NSWindow* createWindow() {
   // Then we add the quit item to the menu. Fortunately the action is simple since terminate: is
   // already implemented in NSApplication and the NSApplication is always in the responder chain.
   NSMenu *appMenu = [NSMenu new];
-  NSString *appName = [[NSProcessInfo processInfo] processName];
+  
   NSString *quitTitle = [@"Quit " stringByAppendingString:appName];
   NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
                       action:@selector(terminate:) keyEquivalent:@"q"];
@@ -40,7 +40,7 @@ NSWindow* createWindow() {
   window.delegate = windowDelegate;
   window.acceptsMouseMovedEvents = YES;
   
-  // Set app title
+  NSString *appName = [[NSProcessInfo processInfo] processName];
   window.title = appName;
 
   // Add fullscreen button

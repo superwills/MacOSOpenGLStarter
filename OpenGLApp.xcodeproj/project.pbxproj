@@ -83,11 +83,11 @@
 				3DE307032C6E6E2500663252 /* StopWatch.cpp */,
 				3DE307092C6EA65000663252 /* WindowDelegate.h */,
 				3DE307072C6EA64300663252 /* WindowDelegate.mm */,
+				3DE3070A2C6FA9E100663252 /* ManualWindow.h */,
 				3D301B6C2B6EC82300BF6A9F /* main.mm */,
 				3D301B672B6EC82300BF6A9F /* Assets.xcassets */,
 				3D301B692B6EC82300BF6A9F /* MainMenu.xib */,
 				3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */,
-				3DE3070A2C6FA9E100663252 /* ManualWindow.h */,
 			);
 			path = OpenGLApp;
 			sourceTree = "<group>";

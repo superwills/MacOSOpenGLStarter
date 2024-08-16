@@ -13,7 +13,7 @@ NSRect viewRect = NSMakeRect(0, 0, 1024, 768);
 
 
 
-#define MANUAL_WINDOW 1
+#define MANUAL_WINDOW 0
 
 #if !MANUAL_WINDOW
 
@@ -21,6 +21,9 @@ NSRect viewRect = NSMakeRect(0, 0, 1024, 768);
 // a class name as the last argument, but strangely MacOS doesn't allow that.
 int main( int argc, const char *argv[] ) {
   @autoreleasepool {
+    // All this will do is follow what the XIB says to do.
+    // So it will create a window for us, laid out and with menus as specified in the XIB,
+    // then it will
     return NSApplicationMain( argc, argv );
   }
 }
@@ -48,6 +51,7 @@ int main( int argc, const char *argv[] ) {
   
     
     /*
+    // Manual startup with a more "normal" run loop.
     [view createDisplayLink];
     [application run];
     //*/
