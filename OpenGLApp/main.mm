@@ -1,96 +1,51 @@
 #import <Cocoa/Cocoa.h>
+
 #import "AppDelegate.h"
 #import "OpenGLView.h"
 #include "Superglobals.h"
-#import "WindowDelegate.h"
 #include "StopWatch.h"
+#import "WindowDelegate.h"
 
 bool running = 0;
+NSRect viewRect = NSMakeRect(0, 0, 1024, 768);
 
 #define USE_XIB 1
 
-OpenGLView *view;
-NSWindow *window;
 
-StopWatch sw2;
 
-void createWindow() {
-  NSUInteger windowStyle = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable;
+#define MANUAL_WINDOW 1
 
-  NSRect screenRect = [[NSScreen mainScreen] frame];
-  NSRect viewRect = NSMakeRect(0, 0, 1024, 768);
-  NSRect windowRect = NSMakeRect(NSMidX(screenRect) - NSMidX(viewRect),
-                                 NSMidY(screenRect) - NSMidY(viewRect),
-                                 viewRect.size.width,
-                                 viewRect.size.height);
+#if !MANUAL_WINDOW
 
-  window = [[NSWindow alloc] initWithContentRect:windowRect
-    styleMask:windowStyle
-    backing:NSBackingStoreBuffered
-    defer:NO];
-
-  [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-
-  NSMenu *menubar = [NSMenu new];
-  NSMenuItem *appMenuItem = [NSMenuItem new];
-  [menubar addItem:appMenuItem];
-  [NSApp setMainMenu:menubar];
-
-  // Then we add the quit item to the menu. Fortunately the action is simple since terminate: is
-  // already implemented in NSApplication and the NSApplication is always in the responder chain.
-  NSMenu *appMenu = [NSMenu new];
-  NSString *appName = [[NSProcessInfo processInfo] processName];
-  NSString *quitTitle = [@"Quit " stringByAppendingString:appName];
-  NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
-                      action:@selector(terminate:) keyEquivalent:@"q"];
-  [appMenu addItem:quitMenuItem];
-  [appMenuItem setSubmenu:appMenu];
-
-  NSWindowController *windowController = [[NSWindowController alloc] initWithWindow:window];
-  
-  view = [[OpenGLView alloc] initWithFrame:viewRect];
-  window.contentView = view;
-
-  WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-  window.delegate = windowDelegate;
-  window.acceptsMouseMovedEvents = YES;
-  
-  // Set app title
-  window.title = appName;
-
-  // Add fullscreen button
-  window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
-  [window makeKeyAndOrderFront:nil];
-}
-
-void frame() {
+// This is the NORMAL way to do it, using a XIB. On iOS UIApplicationMain lets you send
+// a class name as the last argument, but strangely MacOS doesn't allow that.
+int main( int argc, const char *argv[] ) {
   @autoreleasepool {
-    NSEvent* ev;
-    do {
-      ev = [NSApp nextEventMatchingMask: NSEventMaskAny
-                              untilDate: nil
-                                 inMode: NSDefaultRunLoopMode
-                                dequeue: YES];
-      if (ev) {
-        // handle events here
-        [NSApp sendEvent: ev];
-      }
-    } while( ev );
+    return NSApplicationMain( argc, argv );
   }
 }
 
+#else
+#include "ManualWindow.h"
+
 AppDelegate *appDelegate;
+OpenGLView *view;
+NSWindow *window;
+StopWatch sw2;
+
 int main( int argc, const char *argv[] ) {
   @autoreleasepool {
-    #if USE_XIB
-    return NSApplicationMain( argc, argv );
-    #else
     NSApplication *application = [NSApplication sharedApplication];
     appDelegate = NSApp.delegate = [[AppDelegate alloc] init];
     running = true;
 
     [NSApp finishLaunching];
-    createWindow();
+    window = createWindow();
+    
+    view = [[OpenGLView alloc] initWithFrame:viewRect];
+    window.contentView = view;
+
+  
     
     /*
     [view createDisplayLink];
@@ -111,6 +66,6 @@ int main( int argc, const char *argv[] ) {
       //printf( "The time was %f fps=%f\n", diff, 1/diff );
     }
     //*/
-    #endif
   }
 }
+#endif

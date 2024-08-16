@@ -35,7 +35,7 @@ StopWatch sw;
 
 - (void) drawRect:(NSRect)bounds {
 
-static double last = sw.sec();
+  static double last = sw.sec();
   
   double now = sw.sec();
   double diff = now - last;

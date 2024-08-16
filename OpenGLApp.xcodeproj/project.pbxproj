@@ -37,6 +37,7 @@
 		3DE307062C6EA60200663252 /* Superglobals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Superglobals.h; sourceTree = "<group>"; };
 		3DE307072C6EA64300663252 /* WindowDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowDelegate.mm; sourceTree = "<group>"; };
 		3DE307092C6EA65000663252 /* WindowDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowDelegate.h; sourceTree = "<group>"; };
+		3DE3070A2C6FA9E100663252 /* ManualWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualWindow.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,19 +74,20 @@
 		3D301B632B6EC81E00BF6A9F /* OpenGLApp */ = {
 			isa = PBXGroup;
 			children = (
+				3DE307062C6EA60200663252 /* Superglobals.h */,
 				3D301B642B6EC81E00BF6A9F /* AppDelegate.h */,
 				3D301B652B6EC81E00BF6A9F /* AppDelegate.mm */,
 				3D301B742B6EC85100BF6A9F /* OpenGLView.h */,
 				3D301B752B6EC85100BF6A9F /* OpenGLView.mm */,
 				3DE307042C6E6E2500663252 /* StopWatch.h */,
 				3DE307032C6E6E2500663252 /* StopWatch.cpp */,
+				3DE307092C6EA65000663252 /* WindowDelegate.h */,
+				3DE307072C6EA64300663252 /* WindowDelegate.mm */,
 				3D301B6C2B6EC82300BF6A9F /* main.mm */,
 				3D301B672B6EC82300BF6A9F /* Assets.xcassets */,
 				3D301B692B6EC82300BF6A9F /* MainMenu.xib */,
 				3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */,
-				3DE307062C6EA60200663252 /* Superglobals.h */,
-				3DE307092C6EA65000663252 /* WindowDelegate.h */,
-				3DE307072C6EA64300663252 /* WindowDelegate.mm */,
+				3DE3070A2C6FA9E100663252 /* ManualWindow.h */,
 			);
 			path = OpenGLApp;
 			sourceTree = "<group>";
