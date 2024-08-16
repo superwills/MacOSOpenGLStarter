@@ -678,21 +678,20 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="177" y="109"/>
+            <point key="canvasLocation" x="15" y="-112"/>
         </menu>
         <window title="OpenGLApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="868" height="535"/>
+            <rect key="contentRect" x="343" y="304" width="1200" height="800"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <view key="contentView" id="EiT-Mj-1SZ" customClass="OpenGLView">
-                <rect key="frame" x="0.0" y="0.0" width="868" height="535"/>
-                <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" autoresizesSubviews="NO" id="EiT-Mj-1SZ" customClass="OpenGLView">
+                <rect key="frame" x="0.0" y="0.0" width="1200" height="800"/>
+                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             </view>
             <connections>
                 <outlet property="delegate" destination="Voe-Tx-rLC" id="top-28-M4D"/>
             </connections>
-            <point key="canvasLocation" x="394" y="487.5"/>
+            <point key="canvasLocation" x="310" y="379"/>
         </window>
     </objects>
 </document>

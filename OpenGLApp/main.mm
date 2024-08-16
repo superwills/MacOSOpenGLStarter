@@ -7,7 +7,7 @@
 
 bool running = 0;
 
-#define USE_XIB 0
+#define USE_XIB 1
 
 OpenGLView *view;
 NSWindow *window;
@@ -92,19 +92,19 @@ int main( int argc, const char *argv[] ) {
     [NSApp finishLaunching];
     createWindow();
     
-    ///*
+    /*
     [view createDisplayLink];
     [application run];
     //*/
     
-    /*
+    ///*
     // unconstrained framerate
     while( running ) {
       double start = sw2.sec();
       frame();
       //Render();
-      //[view setNeedsDisplay:YES];
-      [view display];
+      view.needsDisplay = YES;
+      //[view display];
       
       //double end = sw2.sec();
       //double diff = end - start;
