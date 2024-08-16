@@ -33,7 +33,7 @@ StopWatch sw;
   
   double now = sw.sec();
   double diff = now - last;
-  printf( "step %f %f\n", diff, 1/diff );
+  printf( "FPS %f\n", 1/diff );
   
   last = sw.sec();
   glClearColor( 0, 0, 0, 0 );
