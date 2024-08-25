@@ -75,11 +75,11 @@ bool GL_OK() {
   glGenVertexArrays(1, &vao);  GL_OK();
   glBindVertexArray(vao);  GL_OK();
   
+  int vertexSize = 6*sizeof(GLfloat);
   glGenBuffers(1, &vbo); GL_OK();
   glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
-  glBufferData(GL_ARRAY_BUFFER, 4 * 6*sizeof(GLfloat), verts, GL_STATIC_DRAW);  GL_OK();
+  glBufferData(GL_ARRAY_BUFFER, 4*vertexSize, verts, GL_STATIC_DRAW);  GL_OK();
   
-  int stride = 6*sizeof(GLfloat);
   // To render data, we have to specify the vertex format of the data first.
   // The data has position & color attributes
   glEnableVertexAttribArray( positionAttrib );  GL_OK();
@@ -88,7 +88,7 @@ bool GL_OK() {
     2,  // Number of data elements per data entry
     GL_FLOAT,  // Data type of the data entries
     GL_FALSE,  // Should the data be normalized (between 0 & 1 (can be used for integer color specs))
-    stride,   // Stride (number of bytes to skip, used for interleaved data arrays)
+    vertexSize,   // Stride (number of bytes to skip, used for interleaved data arrays)
     0  // Data pointer
   );  GL_OK();
   
@@ -96,7 +96,7 @@ bool GL_OK() {
   size_t positionOffset = 2*sizeof(GLfloat);
   // Enable the color vertex attribute
   glEnableVertexAttribArray( colorAttrib );
-  glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, stride, (const void*)(positionOffset) );  GL_OK();
+  glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, vertexSize, (const void*)(positionOffset) );  GL_OK();
     
   
   
@@ -179,11 +179,11 @@ bool GL_OK() {
 
 - (void) drawRect:(NSRect)bounds {
   [[self openGLContext] makeCurrentContext];
-  glClearColor( 0, 1, 0, 0 );
+  glClearColor( 0, 0, 0, 0 );
   glClear( GL_COLOR_BUFFER_BIT );
   
   //[self printFPS];
-  
+  glUseProgram(shaderProgram);
   
   glBindVertexArray( vao );  GL_OK();
   glBindBuffer( GL_ARRAY_BUFFER, vbo );  GL_OK();
