@@ -27,7 +27,7 @@ bool GL_OK() {
   return self;
 }
 
-#if 1
+// Pull profile up from GL 2.1 to GL 4.1
 + (NSOpenGLPixelFormat*) defaultPixelFormat {
   // If you don't override this method the default pixel format you'd get is OpenGL 2.1 and GLSL 1.2
   // Use OpenGL 4.1 and GLSL 4.1
@@ -43,8 +43,6 @@ bool GL_OK() {
   return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
 }
 
-#endif
-
 - (void) prepareOpenGL {
   [super prepareOpenGL];
   
@@ -58,20 +56,19 @@ bool GL_OK() {
   struct Vertex {
     float x,y, r,g,b,a;
   };
-  const GLfloat verts[] = {
-    -0.5, -0.5,  1, 0, 0, 1,
-     0.5, -0.5,  0, 1, 0, 1,
-    -0.5,  0.5,  0, 0, 1, 1,
-     0.5,  0.5,  1, 1, 1, 1,
+  const Vertex verts[] = {
+    { -0.5, -0.5,  1, 0, 0, 1 },
+    {  0.5, -0.5,  0, 1, 0, 1 },
+    { -0.5,  0.5,  0, 0, 1, 1 },
+    {  0.5,  0.5,  1, 1, 1, 1 },
   };
   
   glGenVertexArrays(1, &vao);  GL_OK();
   glBindVertexArray(vao);  GL_OK();
   
-  int vertexSize = 6*sizeof(GLfloat);
   glGenBuffers(1, &vbo); GL_OK();
   glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
-  glBufferData(GL_ARRAY_BUFFER, 4*vertexSize, verts, GL_STATIC_DRAW);  GL_OK();
+  glBufferData(GL_ARRAY_BUFFER, 4*sizeof( Vertex ), verts, GL_STATIC_DRAW);  GL_OK();
   
   // To render data, we have to specify the vertex format of the data first.
   // The data has position & color attributes
@@ -81,7 +78,7 @@ bool GL_OK() {
     2,  // Number of data elements per data entry
     GL_FLOAT,  // Data type of the data entries
     GL_FALSE,  // Should the data be normalized (between 0 & 1 (can be used for integer color specs))
-    vertexSize,   // Stride (number of bytes to skip, used for interleaved data arrays)
+    sizeof( Vertex ),   // Stride (number of bytes to skip, used for interleaved data arrays)
     0  // Data pointer
   );  GL_OK();
   
@@ -89,7 +86,7 @@ bool GL_OK() {
   size_t positionOffset = 2*sizeof(GLfloat);
   // Enable the color vertex attribute
   glEnableVertexAttribArray( colorAttrib );
-  glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, vertexSize, (const void*)(positionOffset) );  GL_OK();
+  glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (const void*)(positionOffset) );  GL_OK();
     
   
   
