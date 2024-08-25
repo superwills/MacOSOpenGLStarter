@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B40609FA-E055-409D-8C82-37937D3C732C"
+            uuid = "6144E267-71B4-46BF-9855-F2CCA0E49F89"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "OpenGLApp/OpenGLView.mm"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
             landmarkName = "GL_OK()"
             landmarkType = "9">
          </BreakpointContent>

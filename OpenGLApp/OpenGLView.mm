@@ -9,13 +9,6 @@ StopWatch sw;
 
 GLuint shaderProgram = 0;
 
-// uniform index
-enum {
-	UNIFORM_MODELVIEW_PROJECTION_MATRIX,
-	NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
 bool GL_OK() {
   GLenum err = glGetError() ;
   if( err != GL_NO_ERROR )
@@ -143,9 +136,6 @@ bool GL_OK() {
   positionAttrib = glGetAttribLocation(shaderProgram, "position");  GL_OK();
   colorAttrib = glGetAttribLocation(shaderProgram, "color");  GL_OK();
    
-	// get uniform locations
-	uniforms[UNIFORM_MODELVIEW_PROJECTION_MATRIX] = glGetUniformLocation(shaderProgram, "modelViewProjectionMatrix");  GL_OK();
-	
 	// release vertex and fragment shaders
 	if (vertShader) {
 		glDeleteShader(vertShader);

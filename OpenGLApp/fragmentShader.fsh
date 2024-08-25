@@ -1,8 +1,8 @@
 #version 330
 
-in vec4 colorVarying;
-out vec4 pixel;
+in vec4 VertexColor;
+out vec4 PixelColor;
 
 void main() {
-	pixel = colorVarying;
+	PixelColor = VertexColor;
 }

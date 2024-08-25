@@ -3,11 +3,10 @@
 in vec4 position;
 in vec4 color;
 
-uniform mat4 modelViewProjectionMatrix;
-
-out vec4 colorVarying;
+// Outputs are the position of the vertex and that vertex's color
+out vec4 VertexColor;
 
 void main() {
-	gl_Position = modelViewProjectionMatrix * position;
-	colorVarying = color;
+	gl_Position = position;
+	VertexColor = color;
 }
