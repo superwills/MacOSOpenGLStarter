@@ -2,6 +2,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@class OpenGLView;
+@interface AppDelegate : NSObject <NSApplicationDelegate> {
+  OpenGLView *glView;
+}
 @end
 

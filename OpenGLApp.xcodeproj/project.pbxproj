@@ -16,6 +16,10 @@
 		3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306992C6C2ACE00663252 /* Cocoa.framework */; };
 		3DE307022C6E6DFB00663252 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE307012C6E6DFB00663252 /* QuartzCore.framework */; };
 		3DE307052C6E6E2500663252 /* StopWatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DE307032C6E6E2500663252 /* StopWatch.cpp */; };
+		3DE307762C70F4AE00663252 /* vertexShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3DE307742C70F4AE00663252 /* vertexShader.vsh */; };
+		3DE307772C70F4AE00663252 /* fragmentShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3DE307752C70F4AE00663252 /* fragmentShader.fsh */; };
+		3DE3077C2C70F54E00663252 /* Shaders.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3DE307782C70F54E00663252 /* Shaders.mm */; };
+		3DE3077D2C70F54E00663252 /* matrix.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3DE3077A2C70F54E00663252 /* matrix.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,12 @@
 		3DE307032C6E6E2500663252 /* StopWatch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StopWatch.cpp; sourceTree = "<group>"; };
 		3DE307042C6E6E2500663252 /* StopWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StopWatch.h; sourceTree = "<group>"; };
 		3DE307062C6EA60200663252 /* Superglobals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Superglobals.h; sourceTree = "<group>"; };
+		3DE307742C70F4AE00663252 /* vertexShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertexShader.vsh; path = OpenGLApp/vertexShader.vsh; sourceTree = "<group>"; };
+		3DE307752C70F4AE00663252 /* fragmentShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fragmentShader.fsh; path = OpenGLApp/fragmentShader.fsh; sourceTree = "<group>"; };
+		3DE307782C70F54E00663252 /* Shaders.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Shaders.mm; sourceTree = "<group>"; };
+		3DE307792C70F54E00663252 /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		3DE3077A2C70F54E00663252 /* matrix.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = matrix.mm; sourceTree = "<group>"; };
+		3DE3077B2C70F54E00663252 /* Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +63,8 @@
 		3D301B582B6EC81E00BF6A9F = {
 			isa = PBXGroup;
 			children = (
+				3DE307752C70F4AE00663252 /* fragmentShader.fsh */,
+				3DE307742C70F4AE00663252 /* vertexShader.vsh */,
 				3D301B632B6EC81E00BF6A9F /* OpenGLApp */,
 				3D301B622B6EC81E00BF6A9F /* Products */,
 				3DE306962C6C2AC500663252 /* Frameworks */,
@@ -70,6 +82,10 @@
 		3D301B632B6EC81E00BF6A9F /* OpenGLApp */ = {
 			isa = PBXGroup;
 			children = (
+				3DE307792C70F54E00663252 /* matrix.h */,
+				3DE3077A2C70F54E00663252 /* matrix.mm */,
+				3DE3077B2C70F54E00663252 /* Shaders.h */,
+				3DE307782C70F54E00663252 /* Shaders.mm */,
 				3DE307062C6EA60200663252 /* Superglobals.h */,
 				3D301B642B6EC81E00BF6A9F /* AppDelegate.h */,
 				3D301B652B6EC81E00BF6A9F /* AppDelegate.mm */,
@@ -152,7 +168,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DE307772C70F4AE00663252 /* fragmentShader.fsh in Resources */,
 				3D301B682B6EC82300BF6A9F /* Assets.xcassets in Resources */,
+				3DE307762C70F4AE00663252 /* vertexShader.vsh in Resources */,
 				3D301B6B2B6EC82300BF6A9F /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,10 +182,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DE3077D2C70F54E00663252 /* matrix.mm in Sources */,
 				3D301B762B6EC85100BF6A9F /* OpenGLView.mm in Sources */,
 				3D301B6D2B6EC82300BF6A9F /* main.mm in Sources */,
 				3D301B662B6EC81E00BF6A9F /* AppDelegate.mm in Sources */,
 				3DE307052C6E6E2500663252 /* StopWatch.cpp in Sources */,
+				3DE3077C2C70F54E00663252 /* Shaders.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
