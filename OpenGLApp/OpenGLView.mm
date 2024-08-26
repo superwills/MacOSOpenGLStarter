@@ -65,6 +65,8 @@ void log( const char* fmt, ... ) {
   printf( "Controller changed" );
 }
 
+struct V2f { float x=0, y=0; };
+V2f left, right;
 - (void) checkController {
   int n = (int)GCController.controllers.count;
   
@@ -91,9 +93,11 @@ void log( const char* fmt, ... ) {
       }
       
       
-      if( float x = xboxController.leftThumbstick.xAxis.value ) {
-        info( "xAxis %f", x );
-      }
+      left.x = xboxController.leftThumbstick.xAxis.value;
+      left.y = xboxController.leftThumbstick.yAxis.value;
+      
+      right.x = xboxController.rightThumbstick.xAxis.value;
+      right.y = xboxController.rightThumbstick.yAxis.value;
       
     }
   }
@@ -103,6 +107,23 @@ void log( const char* fmt, ... ) {
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidConnectNotification object:nil];
 
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidDisconnectNotification object:nil];
+}
+
+struct Vertex {
+  float x,y, r,g,b,a;
+};
+- (void) flushBuffers {
+
+  Vertex verts[] = {
+    { -.5f + left.x, -.5f + left.y,  1, 0, 0, 1 }, //LL
+    {  .5f + right.x, -.5f + right.y,  0, 1, 0, 1 }, //BR
+    { -0.5,  0.5,  0, 0, 1, 1 },
+    {  0.5,  0.5,  1, 1, 1, 1 },
+  };
+  
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
+  glBufferData(GL_ARRAY_BUFFER, 4*sizeof( Vertex ), verts, GL_STATIC_DRAW);  GL_OK();
+  
 }
 
 - (void) prepareOpenGL {
@@ -115,23 +136,11 @@ void log( const char* fmt, ... ) {
   
   [self loadShaders];
   
-  struct Vertex {
-    float x,y, r,g,b,a;
-  };
-  const Vertex verts[] = {
-    { -0.5, -0.5,  1, 0, 0, 1 },
-    {  0.5, -0.5,  0, 1, 0, 1 },
-    { -0.5,  0.5,  0, 0, 1, 1 },
-    {  0.5,  0.5,  1, 1, 1, 1 },
-  };
-  
   glGenVertexArrays(1, &vao);  GL_OK();
   glBindVertexArray(vao);  GL_OK();
   
   glGenBuffers(1, &vbo); GL_OK();
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
-  glBufferData(GL_ARRAY_BUFFER, 4*sizeof( Vertex ), verts, GL_STATIC_DRAW);  GL_OK();
-  
+  [self flushBuffers];
   // To render data, we have to specify the vertex format of the data first.
   // The data has position & color attributes
   glEnableVertexAttribArray( positionAttrib );  GL_OK();
@@ -149,6 +158,7 @@ void log( const char* fmt, ... ) {
   // Enable the color vertex attribute
   glEnableVertexAttribArray( colorAttrib );
   glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (const void*)(positionOffset) );  GL_OK();
+  
   
   [self initController];
 }
@@ -231,6 +241,7 @@ void log( const char* fmt, ... ) {
   
   glBindVertexArray( vao );  GL_OK();
   glBindBuffer( GL_ARRAY_BUFFER, vbo );  GL_OK();
+  [self flushBuffers];
   
   // Draw the vertex array
   glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );  GL_OK();
