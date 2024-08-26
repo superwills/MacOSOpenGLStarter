@@ -13,6 +13,11 @@
 #import <GameController/GCControllerDirectionPad.h>
 #import <GameController/GCControllerAxisInput.h>
 
+#import <GameController/GCKeyCodes.h>
+#import <GameController/GCKeyNames.h>
+#import <GameController/GCKeyboard.h>
+#import <GameController/GCKeyboardInput.h>
+
 StopWatch sw;
 
 bool GL_OK() {
@@ -61,8 +66,25 @@ void log( const char* fmt, ... ) {
   return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
 }
 
-- (void) controllerStateChanged {
-  printf( "Controller changed" );
+GCKeyboard *keyboard;
+- (void) checkKeyboard {
+  
+  // https://github.com/manaporkun/gc-input-events/blob/main/GCKeyboardEvents.m
+  GCKeyboardInput *input = keyboard.keyboardInput;
+  
+  //if( input.anyKeyPressed )    puts( "KEY" );
+  
+  GCControllerButtonInput *A = [input buttonForKeyCode:GCKeyCodeKeyA];
+  if( A.pressed ) {
+    puts( "A" );
+  }
+  
+  GCControllerButtonInput *B = [input buttonForKeyCode:GCKeyCodeKeyB];
+  if( B.pressed ) {
+    puts( "B" );
+  }
+  
+  
 }
 
 struct V2f { float x=0, y=0; };
@@ -72,6 +94,7 @@ V2f left, right;
   
   if( n ) {
     // there's a controller. poll input.
+    // xbox sample here https://github.com/moonlight-stream/moonlight-ios/blob/master/Limelight/Input/ControllerSupport.m
     GCController *controller = GCController.controllers[ 0 ];
     
     //info( "Class type %s", control.extendedGamepad.className.UTF8String );
@@ -103,10 +126,25 @@ V2f left, right;
   }
 }
 
-- (void) initController {
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidConnectNotification object:nil];
+- (void) controllerConnected:(NSNotification*) notification {
+  puts( "controllerConnected" );
+}
+- (void) controllerDisconnected:(NSNotification*) notification {
+  puts( "controllerDisconnected" );
+}
+- (void) keyboardConnected:(NSNotification*) notification {
+  puts( "keyboardConnected" );
+  keyboard = (GCKeyboard*)notification.object;
+}
+- (void) keyboardDisconnected:(NSNotification*) notification {
+  puts( "keyboardDisconnected" );
+}
 
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidDisconnectNotification object:nil];
+- (void) initController {
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected) name:GCControllerDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected) name:GCControllerDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardConnected:) name:GCKeyboardDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDisconnected:) name:GCKeyboardDidDisconnectNotification object:nil];
 }
 
 struct Vertex {
@@ -214,6 +252,7 @@ struct Vertex {
 
 - (void) update:(CADisplayLink*) sender {
   [self checkController];
+  [self checkKeyboard];
   [self display];
 }
 
