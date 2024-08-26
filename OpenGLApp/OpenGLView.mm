@@ -5,9 +5,15 @@
 #include "StopWatch.h"
 #import "Shaders.h"
 
-StopWatch sw;
+#import <GameController/GCController.h>
+#import <GameController/GCPhysicalInputElement.h>
+#import <GameController/GCExtendedGamepad.h>
+#import <GameController/GCXboxGamepad.h>
+#import <GameController/GCControllerButtonInput.h>
+#import <GameController/GCControllerDirectionPad.h>
+#import <GameController/GCControllerAxisInput.h>
 
-GLuint shaderProgram = 0;
+StopWatch sw;
 
 bool GL_OK() {
   GLenum err = glGetError() ;
@@ -15,6 +21,18 @@ bool GL_OK() {
     printf( "GLERROR %d\n", err ) ;
   return err == GL_NO_ERROR ;
 }
+
+void log( const char* fmt, ... ) {
+  printf( "[%f] ", sw.sec() );
+  va_list lp;
+  va_start( lp, fmt );
+  vprintf( fmt, lp );
+  va_end( lp );
+  
+  puts("");
+}
+
+#define info( ... ) log( __VA_ARGS__ )
 
 @implementation OpenGLView
 
@@ -41,6 +59,50 @@ bool GL_OK() {
   };
 
   return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+}
+
+- (void) controllerStateChanged {
+  printf( "Controller changed" );
+}
+
+- (void) checkController {
+  int n = (int)GCController.controllers.count;
+  
+  if( n ) {
+    // there's a controller. poll input.
+    GCController *controller = GCController.controllers[ 0 ];
+    
+    //info( "Class type %s", control.extendedGamepad.className.UTF8String );
+    if( [controller.extendedGamepad isKindOfClass:[GCXboxGamepad class]] ) {
+      //info( "It's an xbox controller" );
+      GCXboxGamepad *xboxController = (GCXboxGamepad*)controller.extendedGamepad;
+      
+      if( xboxController.buttonA.pressed ) {
+        info( "you pushed A!" );
+      }
+      if( xboxController.buttonB.pressed ) {
+        info( "you pushed B!" );
+      }
+      if( xboxController.buttonX.pressed ) {
+        info( "you pushed X!" );
+      }
+      if( xboxController.buttonY.pressed ) {
+        info( "you pushed Y!" );
+      }
+      
+      
+      if( float x = xboxController.leftThumbstick.xAxis.value ) {
+        info( "xAxis %f", x );
+      }
+      
+    }
+  }
+}
+
+- (void) initController {
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidConnectNotification object:nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerStateChanged) name:GCControllerDidDisconnectNotification object:nil];
 }
 
 - (void) prepareOpenGL {
@@ -87,13 +149,8 @@ bool GL_OK() {
   // Enable the color vertex attribute
   glEnableVertexAttribArray( colorAttrib );
   glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (const void*)(positionOffset) );  GL_OK();
-    
   
-  
-  
-
-  
-  
+  [self initController];
 }
 
 - (void) loadShaders {
@@ -145,8 +202,8 @@ bool GL_OK() {
 	
 }
 
-
 - (void) update:(CADisplayLink*) sender {
+  [self checkController];
   [self display];
 }
 
@@ -177,23 +234,6 @@ bool GL_OK() {
   
   // Draw the vertex array
   glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );  GL_OK();
-  
-  #if 0
-  // OpenGL 2.1
-  
-  glColor3f( 1, .85, .35 );
-  
-  static float d = 0;
-  //d = fabsf( sinf( sw.sec() ) );
-  d += .001;
-  glBegin(GL_TRIANGLES);
-  glVertex3f(  0.0,  0.6, 0.0);
-  glVertex3f( -0.2 - d, -0.3, 0.0);
-  glVertex3f(  0.2 + d, -0.3 ,0.0);
-  glEnd();
-  #endif
-  
-  glFlush();
   [[self openGLContext] flushBuffer]; //REQUIRED.
 }
 

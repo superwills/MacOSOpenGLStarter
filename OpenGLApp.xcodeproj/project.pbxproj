@@ -12,6 +12,7 @@
 		3D301B6B2B6EC82300BF6A9F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D301B692B6EC82300BF6A9F /* MainMenu.xib */; };
 		3D301B6D2B6EC82300BF6A9F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B6C2B6EC82300BF6A9F /* main.mm */; };
 		3D301B762B6EC85100BF6A9F /* OpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D301B752B6EC85100BF6A9F /* OpenGLView.mm */; };
+		3DD349E42C7B87CD007FE6CD /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD349E32C7B87CD007FE6CD /* GameController.framework */; };
 		3DE306982C6C2AC500663252 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306972C6C2AC500663252 /* OpenGL.framework */; };
 		3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE306992C6C2ACE00663252 /* Cocoa.framework */; };
 		3DE307022C6E6DFB00663252 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE307012C6E6DFB00663252 /* QuartzCore.framework */; };
@@ -32,6 +33,7 @@
 		3D301B6E2B6EC82300BF6A9F /* OpenGLApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenGLApp.entitlements; sourceTree = "<group>"; };
 		3D301B742B6EC85100BF6A9F /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		3D301B752B6EC85100BF6A9F /* OpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLView.mm; sourceTree = "<group>"; };
+		3DD349E32C7B87CD007FE6CD /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		3DE306972C6C2AC500663252 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		3DE306992C6C2ACE00663252 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3DE307012C6E6DFB00663252 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -53,6 +55,7 @@
 			files = (
 				3DE307022C6E6DFB00663252 /* QuartzCore.framework in Frameworks */,
 				3DE3069A2C6C2ACE00663252 /* Cocoa.framework in Frameworks */,
+				3DD349E42C7B87CD007FE6CD /* GameController.framework in Frameworks */,
 				3DE306982C6C2AC500663252 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +107,7 @@
 		3DE306962C6C2AC500663252 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3DD349E32C7B87CD007FE6CD /* GameController.framework */,
 				3DE307012C6E6DFB00663252 /* QuartzCore.framework */,
 				3DE306992C6C2ACE00663252 /* Cocoa.framework */,
 				3DE306972C6C2AC500663252 /* OpenGL.framework */,

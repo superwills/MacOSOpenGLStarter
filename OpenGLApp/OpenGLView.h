@@ -4,7 +4,7 @@
 
 @interface OpenGLView : NSOpenGLView {
   CADisplayLink *displayLink;
-  GLuint vao, vbo;
+  GLuint vao, vbo, shaderProgram;
   GLint positionAttrib, colorAttrib;
 }
 
