@@ -66,9 +66,7 @@ void log( const char* fmt, ... ) {
   return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
 }
 
-GCKeyboard *keyboard;
 - (void) checkKeyboard {
-  
   // https://github.com/manaporkun/gc-input-events/blob/main/GCKeyboardEvents.m
   GCKeyboardInput *input = keyboard.keyboardInput;
   
@@ -83,12 +81,8 @@ GCKeyboard *keyboard;
   if( B.pressed ) {
     puts( "B" );
   }
-  
-  
 }
 
-struct V2f { float x=0, y=0; };
-V2f left, right;
 - (void) checkController {
   int n = (int)GCController.controllers.count;
   
@@ -116,11 +110,11 @@ V2f left, right;
       }
       
       
-      left.x = xboxController.leftThumbstick.xAxis.value;
-      left.y = xboxController.leftThumbstick.yAxis.value;
+      leftStick.x = xboxController.leftThumbstick.xAxis.value;
+      leftStick.y = xboxController.leftThumbstick.yAxis.value;
       
-      right.x = xboxController.rightThumbstick.xAxis.value;
-      right.y = xboxController.rightThumbstick.yAxis.value;
+      rightStick.x = xboxController.rightThumbstick.xAxis.value;
+      rightStick.y = xboxController.rightThumbstick.yAxis.value;
       
     }
   }
@@ -141,20 +135,17 @@ V2f left, right;
 }
 
 - (void) initController {
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected) name:GCControllerDidConnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected) name:GCControllerDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected:) name:GCControllerDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected:) name:GCControllerDidDisconnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardConnected:) name:GCKeyboardDidConnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDisconnected:) name:GCKeyboardDidDisconnectNotification object:nil];
 }
 
-struct Vertex {
-  float x,y, r,g,b,a;
-};
 - (void) flushBuffers {
 
   Vertex verts[] = {
-    { -.5f + left.x, -.5f + left.y,  1, 0, 0, 1 }, //LL
-    {  .5f + right.x, -.5f + right.y,  0, 1, 0, 1 }, //BR
+    { -.5f + leftStick.x, -.5f + leftStick.y,  1, 0, 0, 1 }, //LL
+    {  .5f + rightStick.x, -.5f + rightStick.y,  0, 1, 0, 1 }, //BR
     { -0.5,  0.5,  0, 0, 1, 1 },
     {  0.5,  0.5,  1, 1, 1, 1 },
   };
@@ -196,7 +187,6 @@ struct Vertex {
   // Enable the color vertex attribute
   glEnableVertexAttribArray( colorAttrib );
   glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (const void*)(positionOffset) );  GL_OK();
-  
   
   [self initController];
 }
@@ -286,6 +276,5 @@ struct Vertex {
   glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );  GL_OK();
   [[self openGLContext] flushBuffer]; //REQUIRED.
 }
-
 
 @end
