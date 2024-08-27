@@ -18,6 +18,9 @@
 #import <GameController/GCKeyboard.h>
 #import <GameController/GCKeyboardInput.h>
 
+#import <GameController/GCMouse.h>
+#import <GameController/GCMouseInput.h>
+
 StopWatch sw;
 
 bool GL_OK() {
@@ -83,6 +86,78 @@ void log( const char* fmt, ... ) {
   }
 }
 
+- (void) checkMouse {
+  leftDown = middleDown = rightDown = 0; 
+  int i = 0;
+  for( GCMouse *mouse in GCMouse.mice.objectEnumerator ) {
+    
+    //printf( "Mouse %d: ", i++ );
+    if( !mouse ) {
+      //puts( "<< NO OBJECT >>" );
+      return;
+    }
+    
+    GCMouseInput *input = mouse.mouseInput;
+    
+    leftDown |= input.leftButton.pressed;
+    middleDown |= input.middleButton.pressed;
+    rightDown |= input.rightButton.pressed;
+    
+    #if _TESTS_
+    // These actually refer to the scroll wheel. They don't work properly. The callback is very slow
+    //lastMouse.x += input.scroll.xAxis.value;
+    //lastMouse.y += input.scroll.yAxis.value;
+    
+    /*
+    printf( "left=%f right=%f up=%f down=%f ", 
+      input.scroll.left.value, input.scroll.right.value,
+      input.scroll.up.value, input.scroll.down.value );
+    printf( "x=%f y=%f leftClick=%d middleClick=%d rightClick=%d ", 
+      input.scroll.xAxis.value, input.scroll.yAxis.value,
+      input.leftButton.pressed, input.middleButton.pressed, input.rightButton.pressed );
+    //*/
+    
+    int auxNo = 0;
+    printf( "aux " );
+    for( GCDeviceButtonInput *aux in input.auxiliaryButtons.objectEnumerator ) {
+      printf( "%d=%d ", auxNo++, aux.pressed );
+    }
+    
+    // axis actually ends up being the scroll wheel, there isn't a way to read mouse x/y thru GCMouse?
+    int axisNo = 0;
+    for( GCDeviceAxisInput *axis in input.axes.objectEnumerator ) {
+      printf( "axis %d: ", axisNo++ ); 
+      printf( "%f ", axis.value );
+    }
+    
+    puts("");
+    #endif
+  }
+}
+
+- (void) nsCheckMouse {
+  // I couldn't get GCMouse x/yAxis to read values at all. They were reading the scroll wheel.
+  NSPoint mouseLoc = NSEvent.mouseLocation;
+  
+  V2f diff;
+  diff.x = mouseLoc.x - lastMouse.x;
+  diff.y = mouseLoc.y - lastMouse.y;
+  
+  float dd = .01;
+  diff.x *= dd;
+  diff.y *= dd;
+  
+  diffMouse.x += diff.x;
+  diffMouse.y += diff.y;
+  
+  float da = .87;
+  diffMouse.x *= da;
+  diffMouse.y *= da;
+  
+  lastMouse.x = mouseLoc.x;
+  lastMouse.y = mouseLoc.y;
+}
+
 - (void) checkController {
   int n = (int)GCController.controllers.count;
   
@@ -134,20 +209,54 @@ void log( const char* fmt, ... ) {
   puts( "keyboardDisconnected" );
 }
 
+- (void) mouseConnected:(NSNotification*) notification {
+  puts( "mouseConnected" );
+  
+  // VERY HIGH LATENCY
+  #if Latency_Doesnt_Matter
+  GCMouse *mouse = (GCMouse*)notification.object;
+  mouse.mouseInput.mouseMovedHandler = ^(GCMouseInput *mouseInput, float deltaX, float deltaY) {
+    //printf( "dx = %f dy = %f", deltaX, deltaY );
+    self->lastMouse.x = deltaX;
+    self->lastMouse.y = deltaY;
+  };
+  #endif
+  
+}
+- (void) mouseDisconnected:(NSNotification*) notification {
+  puts( "mouseDisconnected" );
+}
+- (void) mouseBecameCurrent:(NSNotification*) notification {
+  puts( "mouseBecameCurrent" );
+}
+- (void) mouseStoppedBeingCurrent:(NSNotification*) notification {
+  puts( "mouseStoppedBeingCurrent" );
+}
+
 - (void) initController {
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected:) name:GCControllerDidConnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected:) name:GCControllerDidDisconnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardConnected:) name:GCKeyboardDidConnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDisconnected:) name:GCKeyboardDidDisconnectNotification object:nil];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseConnected:) name:GCMouseDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseDisconnected:) name:GCMouseDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseBecameCurrent:) name:GCMouseDidBecomeCurrentNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseStoppedBeingCurrent:) name:GCMouseDidStopBeingCurrentNotification object:nil];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected:) name:GCControllerDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected:) name:GCControllerDidDisconnectNotification object:nil];
+  
+  NSPoint mouseLoc = NSEvent.mouseLocation;
+  lastMouse.x = mouseLoc.x;
+  lastMouse.y = mouseLoc.y;
 }
 
 - (void) flushBuffers {
-
+  
   Vertex verts[] = {
-    { -.5f + leftStick.x, -.5f + leftStick.y,  1, 0, 0, 1 }, //LL
-    {  .5f + rightStick.x, -.5f + rightStick.y,  0, 1, 0, 1 }, //BR
-    { -0.5,  0.5,  0, 0, 1, 1 },
-    {  0.5,  0.5,  1, 1, 1, 1 },
+    { -.5f + leftStick.x, -.5f + leftStick.y,  (float)leftDown, .25, .25, 1 }, //LL
+    {  .5f + rightStick.x, -.5f + rightStick.y,  .25, .25, (float)rightDown, 1 }, //BR
+    { -.5f + diffMouse.x,  .5f + diffMouse.y,  .25, (float)middleDown, .25, 1 }, //TL
+    {  0.5,  0.5,  1, 1, 1, 1 }, //TR
   };
   
   glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
@@ -241,8 +350,10 @@ void log( const char* fmt, ... ) {
 }
 
 - (void) update:(CADisplayLink*) sender {
-  [self checkController];
   [self checkKeyboard];
+  [self checkMouse];   // for mouse button states
+  [self nsCheckMouse]; // for mouse x/y because GCMouse can't seem to read that
+  [self checkController];
   [self display];
 }
 
@@ -256,7 +367,7 @@ void log( const char* fmt, ... ) {
   static double last = sw.sec();
   double now = sw.sec();
   double diff = now - last;
-  //printf( "FPS %f\n", 1/diff );
+  printf( "FPS %f\n", 1/diff );
   last = sw.sec();
 }
 

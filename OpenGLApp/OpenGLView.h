@@ -16,6 +16,9 @@ struct Vertex {
   
   GCKeyboard *keyboard;
   V2f leftStick, rightStick;
+  V2f lastMouse, diffMouse;
+  
+  bool leftDown, middleDown, rightDown;
 }
 
 - (void) createDisplayLink;
