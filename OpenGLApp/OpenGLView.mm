@@ -86,6 +86,58 @@ void log( const char* fmt, ... ) {
   }
 }
 
+string concat( NSSet<NSString*> *setStrings ) {
+  string res;
+  for( NSString *s in setStrings ) {
+    res += s.UTF8String;
+    res += ", ";
+  }
+  
+  return res;
+}
+
+- (void) printInfo:(GCMouseInput*)input {
+  if( input.allTouchpads.count ) {
+    printf( "touchpads: " );
+    for( GCDeviceTouchpad *tp in input.allTouchpads.objectEnumerator ) {
+      printf( "%s", concat( tp.aliases ).c_str() );
+    }
+    puts("");
+  }
+  
+  if( input.allElements.count ) {
+    printf( "allElements: " );
+    for( GCDeviceElement *elt in input.allElements.objectEnumerator ) {
+      printf( "%s", concat( elt.aliases ).c_str() );
+    }
+    puts("");
+  }
+  
+  if( input.allButtons.count ) {
+    printf( "allButtons: " );
+    for( GCDeviceButtonInput *elt in input.allButtons.objectEnumerator ) {
+      printf( "%s", concat( elt.aliases ).c_str() );
+    }
+    puts("");
+  }
+  
+  if( input.allAxes.count ) {
+    printf( "axes: " );
+    for( GCDeviceAxisInput *elt in input.allAxes.objectEnumerator ) {
+      printf( "%s", concat( elt.aliases ).c_str() );
+    }
+    puts("");
+  }
+  
+  if( input.allDpads.count ) {
+    printf( "dirpads: " );
+    for( GCDeviceDirectionPad *elt in input.allDpads.objectEnumerator ) {
+      printf( "%s", concat( elt.aliases ).c_str() );
+    }
+    puts("");
+  }
+}
+
 - (void) checkMouse {
   leftDown = middleDown = rightDown = 0; 
   int i = 0;
@@ -103,19 +155,19 @@ void log( const char* fmt, ... ) {
     middleDown |= input.middleButton.pressed;
     rightDown |= input.rightButton.pressed;
     
-    #if _TESTS_
+    #if 0
     // These actually refer to the scroll wheel. They don't work properly. The callback is very slow
     //lastMouse.x += input.scroll.xAxis.value;
     //lastMouse.y += input.scroll.yAxis.value;
     
-    /*
+    //[self printInfo:input];
+    
     printf( "left=%f right=%f up=%f down=%f ", 
       input.scroll.left.value, input.scroll.right.value,
       input.scroll.up.value, input.scroll.down.value );
     printf( "x=%f y=%f leftClick=%d middleClick=%d rightClick=%d ", 
       input.scroll.xAxis.value, input.scroll.yAxis.value,
       input.leftButton.pressed, input.middleButton.pressed, input.rightButton.pressed );
-    //*/
     
     int auxNo = 0;
     printf( "aux " );
