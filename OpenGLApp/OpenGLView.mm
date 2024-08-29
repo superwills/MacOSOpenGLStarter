@@ -42,6 +42,38 @@ void log( const char* fmt, ... ) {
 
 #define info( ... ) log( __VA_ARGS__ )
 
+
+
+
+
+
+@implementation Listener
+- (id<GCDevice>) device {
+  return (id<GCDevice>)object;
+}
+
+- (void) connected:(NSNotification*) notification {
+  object = notification.object;
+  printf( "connected %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+}
+
+- (void) disconnected:(NSNotification*) notification {
+  object = notification.object; // assign this just in case
+  printf( "disconnected %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+}
+
+- (void) becameCurrent:(NSNotification*) notification {
+  // This can happen before `connected` 
+  object = notification.object;
+  printf( "becameCurrent %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+}
+
+- (void) stoppedBeingCurrent:(NSNotification*) notification {
+  object = notification.object; // assign this just in case
+  printf( "stoppedBeingCurrent %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+}
+@end
+
 @implementation OpenGLView
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
@@ -71,9 +103,10 @@ void log( const char* fmt, ... ) {
 
 - (void) checkKeyboard {
   // https://github.com/manaporkun/gc-input-events/blob/main/GCKeyboardEvents.m
-  GCKeyboardInput *input = keyboard.keyboardInput;
+  GCKeyboardInput *input = GCKeyboard.coalescedKeyboard.keyboardInput;
   
   //if( input.anyKeyPressed )    puts( "KEY" );
+  
   
   GCControllerButtonInput *A = [input buttonForKeyCode:GCKeyCodeKeyA];
   if( A.pressed ) {
@@ -140,7 +173,8 @@ string concat( NSSet<NSString*> *setStrings ) {
 
 - (void) checkMouse {
   leftDown = middleDown = rightDown = 0; 
-  int i = 0;
+  
+  
   for( GCMouse *mouse in GCMouse.mice.objectEnumerator ) {
     
     //printf( "Mouse %d: ", i++ );
@@ -217,7 +251,6 @@ string concat( NSSet<NSString*> *setStrings ) {
     // there's a controller. poll input.
     // xbox sample here https://github.com/moonlight-stream/moonlight-ios/blob/master/Limelight/Input/ControllerSupport.m
     GCController *controller = GCController.controllers[ 0 ];
-    
     //info( "Class type %s", control.extendedGamepad.className.UTF8String );
     if( [controller.extendedGamepad isKindOfClass:[GCXboxGamepad class]] ) {
       //info( "It's an xbox controller" );
@@ -247,20 +280,6 @@ string concat( NSSet<NSString*> *setStrings ) {
   }
 }
 
-- (void) controllerConnected:(NSNotification*) notification {
-  puts( "controllerConnected" );
-}
-- (void) controllerDisconnected:(NSNotification*) notification {
-  puts( "controllerDisconnected" );
-}
-- (void) keyboardConnected:(NSNotification*) notification {
-  puts( "keyboardConnected" );
-  keyboard = (GCKeyboard*)notification.object;
-}
-- (void) keyboardDisconnected:(NSNotification*) notification {
-  puts( "keyboardDisconnected" );
-}
-
 - (void) mouseConnected:(NSNotification*) notification {
   puts( "mouseConnected" );
   
@@ -275,27 +294,26 @@ string concat( NSSet<NSString*> *setStrings ) {
   #endif
   
 }
-- (void) mouseDisconnected:(NSNotification*) notification {
-  puts( "mouseDisconnected" );
-}
-- (void) mouseBecameCurrent:(NSNotification*) notification {
-  puts( "mouseBecameCurrent" );
-}
-- (void) mouseStoppedBeingCurrent:(NSNotification*) notification {
-  puts( "mouseStoppedBeingCurrent" );
-}
 
 - (void) initController {
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardConnected:) name:GCKeyboardDidConnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDisconnected:) name:GCKeyboardDidDisconnectNotification object:nil];
+
+  keyboardListener = [[Listener<GCKeyboard*> alloc] init];
+  [[NSNotificationCenter defaultCenter] addObserver:keyboardListener selector:@selector(connected:) name:GCKeyboardDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:keyboardListener selector:@selector(disconnected:) name:GCKeyboardDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:keyboardListener selector:@selector(becameCurrent:) name:GCKeyboardDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:keyboardListener selector:@selector(stoppedBeingCurrent:) name:GCKeyboardDidDisconnectNotification object:nil];
   
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseConnected:) name:GCMouseDidConnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseDisconnected:) name:GCMouseDidDisconnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseBecameCurrent:) name:GCMouseDidBecomeCurrentNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseStoppedBeingCurrent:) name:GCMouseDidStopBeingCurrentNotification object:nil];
+  mouseListener = [[Listener<GCMouse*> alloc] init];
+  [[NSNotificationCenter defaultCenter] addObserver:mouseListener selector:@selector(connected:) name:GCMouseDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:mouseListener selector:@selector(disconnected:) name:GCMouseDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:mouseListener selector:@selector(becameCurrent:) name:GCMouseDidBecomeCurrentNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:mouseListener selector:@selector(stoppedBeingCurrent:) name:GCMouseDidStopBeingCurrentNotification object:nil];
   
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerConnected:) name:GCControllerDidConnectNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controllerDisconnected:) name:GCControllerDidDisconnectNotification object:nil];
+  gamepadListener = [[Listener<GCController*> alloc] init];
+  [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(connected:) name:GCControllerDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(disconnected:) name:GCControllerDidDisconnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(becameCurrent:) name:GCKeyboardDidConnectNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(stoppedBeingCurrent:) name:GCKeyboardDidDisconnectNotification object:nil];
   
   NSPoint mouseLoc = NSEvent.mouseLocation;
   lastMouse.x = mouseLoc.x;
