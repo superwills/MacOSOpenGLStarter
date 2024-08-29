@@ -295,7 +295,7 @@ string concat( NSSet<NSString*> *setStrings ) {
   
 }
 
-- (void) initController {
+- (void) initListeners {
 
   keyboardListener = [[Listener<GCKeyboard*> alloc] init];
   [[NSNotificationCenter defaultCenter] addObserver:keyboardListener selector:@selector(connected:) name:GCKeyboardDidConnectNotification object:nil];
@@ -367,7 +367,7 @@ string concat( NSSet<NSString*> *setStrings ) {
   glEnableVertexAttribArray( colorAttrib );
   glVertexAttribPointer( colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (const void*)(positionOffset) );  GL_OK();
   
-  [self initController];
+  [self initListeners];
 }
 
 - (void) loadShaders {
