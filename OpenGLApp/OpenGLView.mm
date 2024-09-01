@@ -195,14 +195,15 @@ string concat( NSSet<NSString*> *setStrings ) {
     middleDown |= input.middleButton.pressed;
     rightDown |= input.rightButton.pressed;
     
-    #if 0
+    #if 1
     // These actually refer to the scroll wheel. They don't work properly. The callback is very slow
     //lastMouse.x += input.scroll.xAxis.value;
     //lastMouse.y += input.scroll.yAxis.value;
     
     //[self printInfo:input];
     
-    printf( "left=%f right=%f up=%f down=%f ", 
+    printf( "[ %f ] left=%f right=%f up=%f down=%f ", 
+      input.lastEventTimestamp,
       input.scroll.left.value, input.scroll.right.value,
       input.scroll.up.value, input.scroll.down.value );
     printf( "x=%f y=%f leftClick=%d middleClick=%d rightClick=%d ", 
