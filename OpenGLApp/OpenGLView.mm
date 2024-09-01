@@ -36,7 +36,6 @@ void log( const char* fmt, ... ) {
   va_start( lp, fmt );
   vprintf( fmt, lp );
   va_end( lp );
-  
   puts("");
 }
 
@@ -171,6 +170,13 @@ string concat( NSSet<NSString*> *setStrings ) {
   }
 }
 
+// Using NSResponder scrollWheel message for mouse wheel because GCMouse repeats last input forever
+- (void) scrollWheel:(NSEvent*) theEvent {
+  [super scrollWheel:theEvent];
+
+  info( "NS scrollWheel: %f", theEvent.deltaY );
+}
+
 - (void) checkMouse {
   leftDown = middleDown = rightDown = 0; 
   
@@ -215,7 +221,7 @@ string concat( NSSet<NSString*> *setStrings ) {
       printf( "axis %d: ", axisNo++ ); 
       printf( "%f ", axis.value );
     }
-    
+
     puts("");
     #endif
   }
