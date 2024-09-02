@@ -195,7 +195,7 @@ string concat( NSSet<NSString*> *setStrings ) {
     middleDown |= input.middleButton.pressed;
     rightDown |= input.rightButton.pressed;
     
-    #if 1
+    #if 0
     // These actually refer to the scroll wheel. They don't work properly. The callback is very slow
     //lastMouse.x += input.scroll.xAxis.value;
     //lastMouse.y += input.scroll.yAxis.value;
@@ -252,12 +252,12 @@ string concat( NSSet<NSString*> *setStrings ) {
 }
 
 - (void) checkController {
-  int n = (int)GCController.controllers.count;
   
-  if( n ) {
+  
+  for( int i = 0; i < (int)GCController.controllers.count; i++ ) {
     // there's a controller. poll input.
     // xbox sample here https://github.com/moonlight-stream/moonlight-ios/blob/master/Limelight/Input/ControllerSupport.m
-    GCController *controller = GCController.controllers[ 0 ];
+    GCController *controller = GCController.controllers[ i ];
     //info( "Class type %s", control.extendedGamepad.className.UTF8String );
     if( [controller.extendedGamepad isKindOfClass:[GCXboxGamepad class]] ) {
       //info( "It's an xbox controller" );
