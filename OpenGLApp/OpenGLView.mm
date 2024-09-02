@@ -21,6 +21,9 @@
 #import <GameController/GCMouse.h>
 #import <GameController/GCMouseInput.h>
 
+#include <set>
+using std::set;
+
 StopWatch sw;
 
 bool GL_OK() {
@@ -45,6 +48,87 @@ void log( const char* fmt, ... ) {
 
 
 
+string concat( NSSet<NSString*> *setStrings ) {
+  string res;
+  
+  int entry = 0;
+  for( NSString *s in setStrings ) {
+    res += s.UTF8String;
+    
+    // don't put a comma after the last one
+    if( ++entry < setStrings.count )
+      res += ", ";
+  }
+  
+  return res;
+}
+
+void printSet( set<string>& s ) {
+  for( const string& str : s ) {
+    printf("  %s\n", str.c_str() );
+  }
+  puts("");
+}
+
+void printInfo( GCPhysicalInputProfile *input ) {
+  
+  
+  if( input.allTouchpads.count ) {
+    puts( "touchpads:" );
+    
+    set<string> elts;
+    for( GCDeviceTouchpad *e in input.allTouchpads.objectEnumerator ) {
+      elts.insert( concat( e.aliases ) );
+    }
+    
+    printSet( elts );
+  }
+  
+  if( input.allElements.count ) {
+    puts( "allElements:" );
+    
+    set<string> elts;
+    for( GCDeviceElement *e in input.allElements.objectEnumerator ) {
+      elts.insert( concat( e.aliases ) );
+    }
+    
+    printSet( elts );
+  }
+  
+  if( input.allButtons.count ) {
+    puts( "allButtons:" );
+    
+    set<string> elts;
+    for( GCDeviceButtonInput *e in input.allButtons.objectEnumerator ) {
+      elts.insert( concat( e.aliases ) );
+    }
+    
+    printSet( elts );
+  }
+  
+  if( input.allAxes.count ) {
+    puts( "axes:" );
+    
+    set<string> elts;
+    for( GCDeviceAxisInput *e in input.allAxes.objectEnumerator ) {
+      elts.insert( concat( e.aliases ) );
+    }
+    
+    printSet( elts );
+  }
+  
+  if( input.allDpads.count ) {
+    puts( "dirpads:" );
+    
+    set<string> elts;
+    for( GCDeviceDirectionPad *e in input.allDpads.objectEnumerator ) {
+      elts.insert( concat( e.aliases ) );
+    }
+    
+    printSet( elts );
+  }
+
+}
 
 @implementation Listener
 - (id<GCDevice>) device {
@@ -54,6 +138,9 @@ void log( const char* fmt, ... ) {
 - (void) connected:(NSNotification*) notification {
   object = notification.object;
   printf( "connected %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+  
+  printInfo( self.device.physicalInputProfile );
+  puts("");
 }
 
 - (void) disconnected:(NSNotification*) notification {
@@ -115,58 +202,6 @@ void log( const char* fmt, ... ) {
   GCControllerButtonInput *B = [input buttonForKeyCode:GCKeyCodeKeyB];
   if( B.pressed ) {
     puts( "B" );
-  }
-}
-
-string concat( NSSet<NSString*> *setStrings ) {
-  string res;
-  for( NSString *s in setStrings ) {
-    res += s.UTF8String;
-    res += ", ";
-  }
-  
-  return res;
-}
-
-- (void) printInfo:(GCMouseInput*)input {
-  if( input.allTouchpads.count ) {
-    printf( "touchpads: " );
-    for( GCDeviceTouchpad *tp in input.allTouchpads.objectEnumerator ) {
-      printf( "%s", concat( tp.aliases ).c_str() );
-    }
-    puts("");
-  }
-  
-  if( input.allElements.count ) {
-    printf( "allElements: " );
-    for( GCDeviceElement *elt in input.allElements.objectEnumerator ) {
-      printf( "%s", concat( elt.aliases ).c_str() );
-    }
-    puts("");
-  }
-  
-  if( input.allButtons.count ) {
-    printf( "allButtons: " );
-    for( GCDeviceButtonInput *elt in input.allButtons.objectEnumerator ) {
-      printf( "%s", concat( elt.aliases ).c_str() );
-    }
-    puts("");
-  }
-  
-  if( input.allAxes.count ) {
-    printf( "axes: " );
-    for( GCDeviceAxisInput *elt in input.allAxes.objectEnumerator ) {
-      printf( "%s", concat( elt.aliases ).c_str() );
-    }
-    puts("");
-  }
-  
-  if( input.allDpads.count ) {
-    printf( "dirpads: " );
-    for( GCDeviceDirectionPad *elt in input.allDpads.objectEnumerator ) {
-      printf( "%s", concat( elt.aliases ).c_str() );
-    }
-    puts("");
   }
 }
 
@@ -325,6 +360,7 @@ string concat( NSSet<NSString*> *setStrings ) {
   NSPoint mouseLoc = NSEvent.mouseLocation;
   lastMouse.x = mouseLoc.x;
   lastMouse.y = mouseLoc.y;
+
 }
 
 - (void) flushBuffers {
