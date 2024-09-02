@@ -22,7 +22,8 @@
 #import <GameController/GCMouseInput.h>
 
 #include <set>
-using std::set;
+#include <vector>
+using std::set, std::vector;
 
 StopWatch sw;
 
@@ -139,7 +140,7 @@ void printInfo( GCPhysicalInputProfile *input ) {
   object = notification.object;
   printf( "connected %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
   
-  printInfo( self.device.physicalInputProfile );
+  //printInfo( self.device.physicalInputProfile );
   puts("");
 }
 
@@ -312,12 +313,45 @@ void printInfo( GCPhysicalInputProfile *input ) {
       }
       
       
-      leftStick.x = xboxController.leftThumbstick.xAxis.value;
-      leftStick.y = xboxController.leftThumbstick.yAxis.value;
+      leftStick.x += xboxController.leftThumbstick.xAxis.value;
+      leftStick.y += xboxController.leftThumbstick.yAxis.value;
       
-      rightStick.x = xboxController.rightThumbstick.xAxis.value;
-      rightStick.y = xboxController.rightThumbstick.yAxis.value;
+      rightStick.x += xboxController.rightThumbstick.xAxis.value;
+      rightStick.y += xboxController.rightThumbstick.yAxis.value;
       
+      #if 1
+      vector<NSString*> allButtonNames = {
+        @"Button A", @"Button B", @"Button X", @"Button Y",
+        @"Button Home", @"Button Menu", @"Button Options", @"Button Share",
+        @"Direction Pad Down", @"Direction Pad Left", @"Direction Pad Right", @"Direction Pad Up",
+        
+        @"Left Shoulder", @"Right Shoulder",
+        @"Left Trigger", @"Right Trigger",
+        
+        @"Left Thumbstick Button", @"Right Thumbstick Button",
+        
+        // These are the axes.
+        //@"Left Thumbstick Down", @"Left Thumbstick Left", @"Left Thumbstick Right", @"Left Thumbstick Up", 
+        //@"Right Thumbstick Down", @"Right Thumbstick Left", @"Right Thumbstick Right", @"Right Thumbstick Up",
+        
+      };
+      
+       
+      
+      for( NSString *buttonName : allButtonNames ) {
+        GCControllerButtonInput *bi = [xboxController.buttons objectForKey:buttonName];
+        
+        if( !bi ) {
+          printf( "I don't have key `%s`", buttonName.UTF8String );
+        }
+        else {
+          if( bi.pressed ) {
+            printf( "%s %f\n", buttonName.UTF8String, bi.value );
+          }
+        }
+      }
+      
+      #endif
     }
   }
 }
