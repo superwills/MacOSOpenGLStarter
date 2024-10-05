@@ -47,6 +47,11 @@ void log( const char* fmt, ... ) {
 
 
 
+V2f leftStick, rightStick;
+V2f lastMouse, nsDiffMouse, gcDiffMouse;
+
+bool leftDown, middleDown, rightDown;
+
 
 
 string concat( NSSet<NSString*> *setStrings ) {
@@ -128,7 +133,6 @@ void printInfo( GCPhysicalInputProfile *input ) {
     
     printSet( elts );
   }
-
 }
 
 @implementation Listener
@@ -139,6 +143,19 @@ void printInfo( GCPhysicalInputProfile *input ) {
 - (void) connected:(NSNotification*) notification {
   object = notification.object;
   printf( "connected %s / %s\n", self.device.vendorName.UTF8String, self.device.productCategory.UTF8String );
+  
+  // Move the device to the high priority queue so there is no input latency
+  self.device.handlerQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+
+  if( [notification.name isEqualToString:GCMouseDidConnectNotification] ) {
+    GCMouse *mouse = (GCMouse*)notification.object;
+    
+    mouse.mouseInput.mouseMovedHandler = ^(GCMouseInput *mouseInput, float deltaX, float deltaY) {
+      //printf( "dx = %f dy = %f\n", deltaX, deltaY );
+      gcDiffMouse.x += deltaX;
+      gcDiffMouse.y += deltaY;
+    };
+  }
   
   //printInfo( self.device.physicalInputProfile );
   puts("");
@@ -206,11 +223,19 @@ void printInfo( GCPhysicalInputProfile *input ) {
   }
 }
 
+- (void) noResponderFor:(SEL) eventSelector {
+  //printf( "No responder for %s", NSStringFromSelector( eventSelector ).UTF8String );
+}
+
 // Using NSResponder scrollWheel message for mouse wheel because GCMouse repeats last input forever
 - (void) scrollWheel:(NSEvent*) theEvent {
   [super scrollWheel:theEvent];
 
   info( "NS scrollWheel: %f", theEvent.deltaY );
+}
+
+- (void)keyDown:(NSEvent *)theEvent {
+
 }
 
 - (void) checkMouse {
@@ -231,36 +256,7 @@ void printInfo( GCPhysicalInputProfile *input ) {
     middleDown |= input.middleButton.pressed;
     rightDown |= input.rightButton.pressed;
     
-    #if 0
-    // These actually refer to the scroll wheel. They don't work properly. The callback is very slow
-    //lastMouse.x += input.scroll.xAxis.value;
-    //lastMouse.y += input.scroll.yAxis.value;
-    
-    //[self printInfo:input];
-    
-    printf( "[ %f ] left=%f right=%f up=%f down=%f ", 
-      input.lastEventTimestamp,
-      input.scroll.left.value, input.scroll.right.value,
-      input.scroll.up.value, input.scroll.down.value );
-    printf( "x=%f y=%f leftClick=%d middleClick=%d rightClick=%d ", 
-      input.scroll.xAxis.value, input.scroll.yAxis.value,
-      input.leftButton.pressed, input.middleButton.pressed, input.rightButton.pressed );
-    
-    int auxNo = 0;
-    printf( "aux " );
-    for( GCDeviceButtonInput *aux in input.auxiliaryButtons.objectEnumerator ) {
-      printf( "%d=%d ", auxNo++, aux.pressed );
-    }
-    
-    // axis actually ends up being the scroll wheel, there isn't a way to read mouse x/y thru GCMouse?
-    int axisNo = 0;
-    for( GCDeviceAxisInput *axis in input.axes.objectEnumerator ) {
-      printf( "axis %d: ", axisNo++ ); 
-      printf( "%f ", axis.value );
-    }
-
-    puts("");
-    #endif
+    // To read the axes, you have to use the callback (see where the mouse is connected above)
   }
 }
 
@@ -272,16 +268,8 @@ void printInfo( GCPhysicalInputProfile *input ) {
   diff.x = mouseLoc.x - lastMouse.x;
   diff.y = mouseLoc.y - lastMouse.y;
   
-  float dd = .01;
-  diff.x *= dd;
-  diff.y *= dd;
-  
-  diffMouse.x += diff.x;
-  diffMouse.y += diff.y;
-  
-  float da = .87;
-  diffMouse.x *= da;
-  diffMouse.y *= da;
+  nsDiffMouse.x += diff.x;
+  nsDiffMouse.y += diff.y;
   
   lastMouse.x = mouseLoc.x;
   lastMouse.y = mouseLoc.y;
@@ -356,21 +344,6 @@ void printInfo( GCPhysicalInputProfile *input ) {
   }
 }
 
-- (void) mouseConnected:(NSNotification*) notification {
-  puts( "mouseConnected" );
-  
-  // VERY HIGH LATENCY
-  #if Latency_Doesnt_Matter
-  GCMouse *mouse = (GCMouse*)notification.object;
-  mouse.mouseInput.mouseMovedHandler = ^(GCMouseInput *mouseInput, float deltaX, float deltaY) {
-    //printf( "dx = %f dy = %f", deltaX, deltaY );
-    self->lastMouse.x = deltaX;
-    self->lastMouse.y = deltaY;
-  };
-  #endif
-  
-}
-
 - (void) initListeners {
 
   keyboardListener = [[Listener<GCKeyboard*> alloc] init];
@@ -390,10 +363,6 @@ void printInfo( GCPhysicalInputProfile *input ) {
   [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(disconnected:) name:GCControllerDidDisconnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(becameCurrent:) name:GCKeyboardDidConnectNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:gamepadListener selector:@selector(stoppedBeingCurrent:) name:GCKeyboardDidDisconnectNotification object:nil];
-  
-  NSPoint mouseLoc = NSEvent.mouseLocation;
-  lastMouse.x = mouseLoc.x;
-  lastMouse.y = mouseLoc.y;
 
 }
 
@@ -402,8 +371,8 @@ void printInfo( GCPhysicalInputProfile *input ) {
   Vertex verts[] = {
     { -.5f + leftStick.x, -.5f + leftStick.y,  (float)leftDown, .25, .25, 1 }, //LL
     {  .5f + rightStick.x, -.5f + rightStick.y,  .25, .25, (float)rightDown, 1 }, //BR
-    { -.5f + diffMouse.x,  .5f + diffMouse.y,  .25, (float)middleDown, .25, 1 }, //TL
-    {  0.5,  0.5,  1, 1, 1, 1 }, //TR
+    { -.5f + nsDiffMouse.x/100.f,  .5f + nsDiffMouse.y/100.f,  .25, (float)middleDown, .25, 1 }, //TL
+    {  .5f + gcDiffMouse.x/100.f,  .5f + gcDiffMouse.y/100.f,  1, 1, 1, 1 }, //TR
   };
   
   glBindBuffer(GL_ARRAY_BUFFER, vbo);  GL_OK();
@@ -533,6 +502,15 @@ void printInfo( GCPhysicalInputProfile *input ) {
   // Draw the vertex array
   glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );  GL_OK();
   [[self openGLContext] flushBuffer]; //REQUIRED.
+  
+  
+  
+  float decay = .87;
+  nsDiffMouse.x *= decay;
+  nsDiffMouse.y *= decay;
+  
+  gcDiffMouse.x *= decay;
+  gcDiffMouse.y *= decay;
 }
 
 @end

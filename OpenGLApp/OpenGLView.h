@@ -36,11 +36,6 @@ struct Vertex {
   Listener<GCKeyboard*> *keyboardListener;
   Listener<GCMouse*> *mouseListener;
   Listener<GCController*> *gamepadListener;
-
-  V2f leftStick, rightStick;
-  V2f lastMouse, diffMouse;
-  
-  bool leftDown, middleDown, rightDown;
 }
 
 - (void) createDisplayLink;

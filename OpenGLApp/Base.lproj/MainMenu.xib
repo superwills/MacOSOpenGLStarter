@@ -680,7 +680,7 @@
             </items>
             <point key="canvasLocation" x="15" y="-112"/>
         </menu>
-        <window title="OpenGLApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="OpenGLApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="343" y="304" width="1200" height="800"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
